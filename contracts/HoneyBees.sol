@@ -28,29 +28,25 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Snapshot.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
 
-
-
-
-
-
-
 contract HoneyBees is ERC20, ERC20Snapshot, AccessControl {
 
-    // Make sure this is updated to reflect honey address
-    ERC20 public honeyAddress = ERC20(0x79AadDB5C58Ef693374d8162Fa67b3bd7d795391); // DUMMY TOKEN ADDRESS
+    
+    ERC20 public honeyAddress; 
 
     bytes32 public constant SNAPSHOT_ROLE = keccak256("SNAPSHOT_ROLE");
     
-    // Set 1Hive Agent address from https://wiki.1hive.org/developers/developers
-    address public honeyDAOAgentAddress = 0x4ba7362f9189572cbb1216819a45aba0d0b2d1cb;
-    
+    // Set 1Hive Agent address in deployer
+    address public honeyDAOAgentAddress;
 
-    constructor() ERC20("HoneyBees", "BEES") {
+    constructor(address honeyTokenAddress, address DAOAgentAddress) ERC20("HoneyBees", "BEES") {
 
       // Giving control (and snapshot ability) to the 1Hive Aragon Agent
-    
-     //   _setupRole(DEFAULT_ADMIN_ROLE, honeyDAOAgentAddress);
-     //   _setupRole(SNAPSHOT_ROLE, honeyDAOAgentAddress);
+        honeyAddress = ERC20(honeyTokenAddress);
+
+        honeyDAOAgentAddress = DAOAgentAddress;
+
+        _setupRole(DEFAULT_ADMIN_ROLE, honeyDAOAgentAddress);
+        _setupRole(SNAPSHOT_ROLE, honeyDAOAgentAddress);
     }
     
     function decimals() public view virtual override returns (uint8) {
