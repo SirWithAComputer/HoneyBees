@@ -65,7 +65,7 @@ contract HoneyBees is ERC20, ERC20Snapshot, AccessControl {
         honeyAddress.transferFrom(msg.sender, address(this), amountOfHoney);
         
         require(honeyAddress.balanceOf(address(this)) == expectedNewContractHoneyBalance);
-        mint(msg.sender, amountOfHoney);
+        _mint(msg.sender, amountOfHoney);
 
         require(this.balanceOf(msg.sender) == expectedNewUserBeeBalance);
         return true;
@@ -113,22 +113,22 @@ contract HoneyBees is ERC20, ERC20Snapshot, AccessControl {
         require(this.balanceOf(msg.sender) == expectedNewUserBeeBalance);
         honeyAddress.transfer(msg.sender, numberOfBees);
   
-        require(this.balanceOf(address(this)) == expectedNewContractHoneyBalance);
+        require(honeyAddress.balanceOf(address(this)) == expectedNewContractHoneyBalance);
         return true;
     }
 
     function collectHoney(uint256 numberOfBees) public returns (bool) {
 
-        require(this.balanceOf(msg.sender) >= numberOfBees);
+        require(this.balanceOf(msg.sender) >= numberOfBees, "Error #1");
         uint256 expectedNewContractHoneyBalance = honeyAddress.balanceOf(address(this)) - numberOfBees;
         uint256 expectedNewUserBeeBalance = this.balanceOf(msg.sender) - numberOfBees;
          
         _burn(msg.sender, numberOfBees);
          
-        require(this.balanceOf(msg.sender) == expectedNewUserBeeBalance); 
+        require(this.balanceOf(msg.sender) == expectedNewUserBeeBalance, "Error #2"); 
         honeyAddress.transfer(msg.sender, numberOfBees);
         
-        require(this.balanceOf(address(this)) == expectedNewContractHoneyBalance);
+        require(honeyAddress.balanceOf(address(this)) == expectedNewContractHoneyBalance, "Error #3");
         return true;
     }
 
@@ -143,7 +143,7 @@ contract HoneyBees is ERC20, ERC20Snapshot, AccessControl {
         require(this.balanceOf(msg.sender) == expectedNewUserBeeBalance);
          honeyAddress.transfer(sendTo, numberOfBees);
         
-        require(this.balanceOf(address(this)) == expectedNewContractHoneyBalance);
+        require(honeyAddress.balanceOf(address(this)) == expectedNewContractHoneyBalance);
          return true;
     }
 
