@@ -73,16 +73,16 @@ contract HoneyBees is ERC20, ERC20Snapshot, AccessControl {
 
     function attractBees(uint256 amountOfHoney) public returns (bool) {
         
-        require(honeyAddress.balanceOf(msg.sender) >= amountOfHoney);
+        require(honeyAddress.balanceOf(msg.sender) >= amountOfHoney, "Error1");
         uint256 expectedNewContractHoneyBalance = honeyAddress.balanceOf(address(this)) + amountOfHoney;
         uint256 expectedNewUserBeeBalance = this.balanceOf(msg.sender) + amountOfHoney;
 
         honeyAddress.transferFrom(msg.sender, address(this), amountOfHoney);
         
-        require(honeyAddress.balanceOf(address(this)) == expectedNewContractHoneyBalance);
+        require(honeyAddress.balanceOf(address(this)) == expectedNewContractHoneyBalance, "Error2");
         _mint(msg.sender, amountOfHoney);
 
-        require(this.balanceOf(msg.sender) == expectedNewUserBeeBalance);
+        require(this.balanceOf(msg.sender) == expectedNewUserBeeBalance, "Error3");
         return true;
     }
 
@@ -90,14 +90,14 @@ contract HoneyBees is ERC20, ERC20Snapshot, AccessControl {
 
         require(honeyAddress.balanceOf(msg.sender) >= amountOfHoney);
         uint256 expectedNewContractHoneyBalance = honeyAddress.balanceOf(address(this)) + amountOfHoney;
-        uint256 expectedNewUserBeeBalance = this.balanceOf(msg.sender) + amountOfHoney;
+        uint256 expectedNewUserBeeBalance = this.balanceOf(sendTo) + amountOfHoney;
 
         honeyAddress.transferFrom(msg.sender, address(this), amountOfHoney);
 
         require(honeyAddress.balanceOf(address(this)) == expectedNewContractHoneyBalance);
          _mint(sendTo, amountOfHoney);
 
-        require(this.balanceOf(msg.sender) == expectedNewUserBeeBalance);
+        require(this.balanceOf(sendTo) == expectedNewUserBeeBalance);
         return true;
     }
     
